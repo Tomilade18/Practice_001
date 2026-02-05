@@ -1,8 +1,10 @@
 import { Router, Request, Response } from "express";
 import { user } from "../utils/constants";
 import { resolveIndexByUserId } from "../utils/middleware";
-import {query, body, validationResult, checkSchema} from "express-validator"
+import {query, body, matchedData, validationResult, checkSchema} from "express-validator"
 import { validationSchema } from "../utils/validationSchema";
+import { User } from "../mongoose/schemas/user";
+import { hashPassword } from "../utils/helpers";
 
 const router = Router();
 
@@ -24,14 +26,14 @@ router.post("/api/user",
      (req: Request, res: Response) => {
     const { body } = req;
     const result = validationResult(req)
-    console.log(result)
+    console.log(result);
 
-    const newUser = {
-        id: user[user.length-1].id + 1,
-        ...body
-    }
+    const data = matchedData(req);
+    data.password = hashPassword(data.password)
 
-    user.push(newUser);
+    const newUser = new User(data)
+
+    newUser.save();
     return res.send(newUser);
 })
 

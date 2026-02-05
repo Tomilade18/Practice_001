@@ -26,5 +26,12 @@ export const validationSchema = {
             },
             errorMessage: "Number of characters Should be between 5 and 32"
         }
-    },
+    }, 
+    password: {
+  isString: true,
+  notEmpty: true,
+  isLength: {
+    options: { min: 6 }
+  }
+}
 }
