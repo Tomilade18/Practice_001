@@ -18,8 +18,8 @@ export const sesionMiddleware = session({
 
 // Hybrid authentication middleware - checks both session and JWT token
 export const authenticateHybrid = (req: Request, res: Response, next: NextFunction) => {
-  // Check if session exists and is authenticated
-  if (req.session && (req.session as any).userId) {
+  // Check if session exists and is authenticated via Passport
+  if (req.session && (req.session as any).passport?.user) {
     return next();
   }
 
@@ -43,7 +43,7 @@ export const authenticateHybrid = (req: Request, res: Response, next: NextFuncti
 
 // Optional: Middleware to require session only
 export const requireSession = (req: Request, res: Response, next: NextFunction) => {
-  if (req.session && (req.session as any).userId) {
+  if (req.session && (req.session as any).passport?.user) {
     return next();
   }
   return res.status(401).json({ 

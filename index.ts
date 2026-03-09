@@ -2,6 +2,7 @@ import express, {Request, Response} from "express";
 import userRouter from "./routes/user"
 import authRouter from "./features/auth/auth.routes"
 import { sesionMiddleware } from "./features/auth/auth.middleware";
+import passport from "./features/strategies/local-strategy";
 import mongoose from "mongoose";
 
 // Connect to MongoDB
@@ -16,6 +17,10 @@ app.use(express.json());
 
 // Session middleware - must be before routes
 app.use(sesionMiddleware);
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 app.use(authRouter);
